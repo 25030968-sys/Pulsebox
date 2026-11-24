@@ -1,13 +1,13 @@
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
-  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
-  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  title:        "Pulsebox 4-Player Quiz Buzzer"      # Project title
+  author:       "Tu Nombre o Equipo"                 # Your name
+  discord:      ""                                   # Your discord username (optional)
+  description:  "4-player buzzer with lockout and true/false evaluation LEDs" # Short description
+  language:     "Verilog"
+  clock_hz:     0                                    # Clock frequency in Hz (or 0 if not applicable)
 
-  # How many tiles your design occupies? A single tile is about 340x160 uM.
+  # How many tiles your design occupies? A single tile is about 340 x 160 uM.
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 3x4 or 4x4
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
@@ -20,25 +20,24 @@ project:
     - "project.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
-# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
+  ui[0]: "Player 1 button"
+  ui[1]: "Player 2 button"
+  ui[2]: "Player 3 button"
+  ui[3]: "Player 4 button"
+  ui[4]: "True (Correct) button"
+  ui[5]: "False (Incorrect) button"
   ui[6]: ""
   ui[7]: ""
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
+  uo[0]: "Player 1 LED"
+  uo[1]: "Player 2 LED"
+  uo[2]: "Player 3 LED"
+  uo[3]: "Player 4 LED"
+  uo[4]: "Correct answer LED"
+  uo[5]: "Incorrect answer LED"
   uo[6]: ""
   uo[7]: ""
 
