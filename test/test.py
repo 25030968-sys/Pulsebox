@@ -8,13 +8,13 @@ from cocotb.triggers import ClockCycles
 
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Start")
+    dut._log.info("Start Pulsebox test")
 
     # Set the clock period to 10 us (100 KHz)
     clock = Clock(dut.clk, 10, unit="us")
     cocotb.start_soon(clock.start())
 
-    # Reset
+    # 1. Reset inicial
     dut._log.info("Reset")
     dut.ena.value = 1
     dut.ui_in.value = 0
@@ -22,19 +22,39 @@ async def test_project(dut):
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 2)
 
-    dut._log.info("Test project behavior")
+    # Verificar que todos los LEDs empiezan en 0
+    assert dut.uo_out.value == 0, f"Expected 0 after reset, got {dut.uo_out.value}"
 
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
+    # 2. Jugador 2 presiona su botón (ui_in = 1 -> 0b00000010)
+    dut._log.info("Player 2 presses button")
+    dut.ui_in.value = 0b00000010
+    await ClockCycles(dut.clk, 2)
+    dut.ui_in.value = 0  # Suelta el botón
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 0b00000010, f"Expected Player 2 LED (0b00000010), got {dut.uo_out.value}"
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
+    # 3. Jugador 1 intenta presionar después (debe quedar bloqueado)
+    dut._log.info("Player 1 tries to press (should be locked out)")
+    dut.ui_in.value = 0b00000001
+    await ClockCycles(dut.clk, 2)
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 0b00000010, f"Player 1 should be locked out, got {dut.uo_out.value}"
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    #assert dut.uo_out.value == 50
+    # 4. Presionar botón Correcto (ui_in = 1 -> 0b00010000)
+    dut._log.info("Correct button pressed")
+    dut.ui_in.value = 0b00010000
+    await ClockCycles(dut.clk, 2)
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 0b00010010, f"Expected Player 2 + Correct LED (0b00010010), got {dut.uo_out.value}"
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # 5. Reset para limpiar LEDs
+    dut._log.info("Reset for next round")
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 5)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 0, f"Expected 0 after reset, got {dut.uo_out.value}"
