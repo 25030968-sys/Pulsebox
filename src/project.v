@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_Pulsebox (
+module tt_um_pulsebox (
     input  wire [7:0] ui_in,    // Entradas dedicadas
     output wire [7:0] uo_out,   // Salidas dedicadas
     input  wire [7:0] uio_in,   // E/S: Ruta de entrada
